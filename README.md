@@ -1,6 +1,6 @@
 # bilow_app
 
-The BilowApp StarterKit
+An opinionated starter app
 
 ## Getting Started
 

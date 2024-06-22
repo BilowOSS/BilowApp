@@ -1,0 +1,26 @@
+{
+  "dart.flutterSdkPath": ".fvm/versions/3.22.2",
+  "dart.flutterHotReloadOnSave": "all",
+  "dart.flutterTrackWidgetCreation": true,
+  "dart.closingLabels": true,
+  "dart.previewFlutterUiGuides": true,
+  "dart.flutterOutline": true,
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/.fvm": true,
+    "**/.idea": true,
+    "**/.vscode": false,
+    "**/build": true,
+    "**/packages": true,
+    "**/models/amplify": true
+  },
+  "files.watcherExclude": {
+    "**/.dart_tool/**": true,
+    "**/.fvm/**": true,
+    "**/.idea/**": true,
+    "**/.vscode/**": false,
+    "**/build/**": true,
+    "**/packages/**": true
+  }
+}
