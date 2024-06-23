@@ -44,3 +44,7 @@ app.*.map.json
 
 # Flutter Version Manager
 .fvm
+
+# Generated Files
+*.freezed.dart
+*.g.dart
