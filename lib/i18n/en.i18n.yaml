@@ -1,0 +1,13 @@
+general:
+  hello: Hello $name
+  appTitle: BilowApp
+
+semantics:
+  pin: Pin
+
+homePage:
+  title: Welcome to BilowApp
+
+errorPage:
+  title: 404
+  subTitle: Page Not Found
