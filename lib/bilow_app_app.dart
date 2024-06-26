@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
 import 'package:bilow_app/enums/enums.dart';
-import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_strategy/url_strategy.dart';
 
 class BilowAppApp extends StatefulWidget {
   const BilowAppApp({
@@ -72,30 +70,5 @@ class _BilowAppAppState extends State<BilowAppApp> {
         },
       ),
     );
-  }
-}
-
-Future<Widget> bilowApp({
-  required Environment environment,
-  void Function()? extra,
-}) async {
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    GoRouter.optionURLReflectsImperativeAPIs = true;
-    LocaleSettings.useDeviceLocale();
-
-    setPathUrlStrategy();
-
-    extra?.call();
-
-    return AppInfo(
-      data: await AppInfoData.get(),
-      child: BilowAppApp(
-        environment: environment,
-      ),
-    );
-  } catch (e) {
-    print(e);
-    throw e;
   }
 }
