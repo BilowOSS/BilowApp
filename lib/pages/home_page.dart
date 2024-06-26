@@ -1,7 +1,9 @@
 // 🐦 Flutter imports:
+import 'package:bilow_app/blocs/blocs.dart';
 import 'package:bilow_app/configs/configs.dart';
 import 'package:bilow_app/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  final _valueCubit = ValueCubit<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +41,17 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            GestureDetector(
-              onTap: () => setState(() => _counter++),
-              child: Text(
-                '$_counter',
-                style: context.theme.textTheme.headlineMedium,
-              ),
+            BlocBuilder<ValueCubit<int>, int>(
+              bloc: _valueCubit,
+              builder: (context, value) {
+                return GestureDetector(
+                  onTap: () => _valueCubit.value = value + 1,
+                  child: Text(
+                    '$value',
+                    style: context.theme.textTheme.headlineMedium,
+                  ),
+                );
+              },
             ),
           ],
         ),
