@@ -1,5 +1,8 @@
 // 🐦 Flutter imports:
+import 'package:bilow_app/configs/configs.dart';
+import 'package:bilow_app/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -18,10 +21,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        trailingActions: <Widget>[
+          PlatformIconButton(
+            icon: Icon(context.platformIcons.settings),
+            onPressed: () => const SettingsRoute().push(context),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -30,17 +39,15 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            GestureDetector(
+              onTap: () => setState(() => _counter++),
+              child: Text(
+                '$_counter',
+                style: context.theme.textTheme.headlineMedium,
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() => _counter++),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
