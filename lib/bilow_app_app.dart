@@ -1,32 +1,18 @@
 // 🐦 Flutter imports:
+import 'package:bilow_app/configs/configs.dart';
 import 'package:bilow_app/extensions/extensions.dart';
 import 'package:bilow_app/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 
 // 🌎 Project imports:
 import 'package:bilow_app/enums/enums.dart';
-import 'package:bilow_app/pages/pages.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_strategy/url_strategy.dart';
 
-Future<Widget> bilowApp({
-  required Environment environment,
-  void Function()? extra,
-}) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  LocaleSettings.useDeviceLocale();
-
-  extra?.call();
-
-  return AppInfo(
-    data: await AppInfoData.get(),
-    child: BilowAppApp(
-      environment: environment,
-    ),
-  );
-}
-
-class BilowAppApp extends StatelessWidget {
+class BilowAppApp extends StatefulWidget {
   const BilowAppApp({
     required this.environment,
     super.key,
@@ -35,31 +21,81 @@ class BilowAppApp extends StatelessWidget {
   final Environment environment;
 
   @override
-  Widget build(BuildContext context) {
-    return TranslationProvider(
-      child: Builder(builder: (context) {
-        final i18n = context.i18n;
+  State<BilowAppApp> createState() => _BilowAppAppState();
+}
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: environment == Environment.development,
-          title: '${i18n.general.appTitle} ${environment.name.capitalize()}',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.orange,
-            ),
-            useMaterial3: true,
-          ),
-          locale: context.locale,
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: const <LocalizationsDelegate>[
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          home: HomePage(
-            title: i18n.homePage.title,
-          ),
-        );
-      }),
+class _BilowAppAppState extends State<BilowAppApp> {
+  final _goRouter = GoRouter(
+    navigatorKey: rootNavigatorKey,
+    routes: $appRoutes,
+    errorBuilder: (context, state) {
+      return const ErrorRoute().build(
+        context,
+        state,
+      );
+    },
+    initialLocation: const HomeRoute().location,
+    debugLogDiagnostics: true,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final environment = widget.environment;
+
+    return TranslationProvider(
+      child: Builder(
+        builder: (context) {
+          final i18n = context.i18n;
+
+          return PlatformApp.router(
+            debugShowCheckedModeBanner: environment == Environment.development,
+            title: '${i18n.general.appTitle} ${environment.name.capitalize()}',
+            locale: context.locale,
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            localizationsDelegates: const <LocalizationsDelegate>[
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            routeInformationProvider: _goRouter.routeInformationProvider,
+            routeInformationParser: _goRouter.routeInformationParser,
+            routerDelegate: _goRouter.routerDelegate,
+            material: (_, __) {
+              return MaterialAppRouterData(
+                theme: ThemeData.light(),
+                darkTheme: ThemeData.dark(),
+              );
+            },
+            cupertino: (_, __) {
+              return CupertinoAppRouterData();
+            },
+          );
+        },
+      ),
     );
+  }
+}
+
+Future<Widget> bilowApp({
+  required Environment environment,
+  void Function()? extra,
+}) async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    GoRouter.optionURLReflectsImperativeAPIs = true;
+    LocaleSettings.useDeviceLocale();
+
+    setPathUrlStrategy();
+
+    extra?.call();
+
+    return AppInfo(
+      data: await AppInfoData.get(),
+      child: BilowAppApp(
+        environment: environment,
+      ),
+    );
+  } catch (e) {
+    print(e);
+    throw e;
   }
 }

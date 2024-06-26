@@ -8,6 +8,9 @@ semantics:
 homePage:
   title: Welcome to BilowApp
 
+settingsPage:
+  title: Settings
+
 errorPage:
   title: 404
   subTitle: Page Not Found
