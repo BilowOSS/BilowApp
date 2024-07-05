@@ -9,6 +9,7 @@ import 'package:bilow_app/enums/enums.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class BilowAppApp extends StatefulWidget {
   const BilowAppApp({
@@ -48,6 +49,16 @@ class _BilowAppAppState extends State<BilowAppApp> {
           return PlatformApp.router(
             debugShowCheckedModeBanner: environment == Environment.development,
             title: '${i18n.general.appTitle} ${environment.name.capitalize()}',
+            builder: (context, child) {
+              return ResponsiveBreakpoints.builder(
+                breakpoints: const <Breakpoint>[
+                  Breakpoint(start: 0, end: 480, name: MOBILE),
+                  Breakpoint(start: 481, end: 800, name: TABLET),
+                  Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                ],
+                child: child!,
+              );
+            },
             locale: context.locale,
             supportedLocales: AppLocaleUtils.supportedLocales,
             localizationsDelegates: const <LocalizationsDelegate>[
