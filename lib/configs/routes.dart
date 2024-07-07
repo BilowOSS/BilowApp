@@ -1,5 +1,5 @@
 // 🐦 Flutter imports:
-import 'package:bilow_app/extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // 📦 Package imports:
@@ -71,9 +71,7 @@ class HomeRoute extends GoRouteData {
   Page<void> buildPage(context, state) {
     return platformPage(
       context: context,
-      child: HomePage(
-        title: context.i18n.homePage.title,
-      ),
+      child: const HomePage(),
     );
   }
 }
