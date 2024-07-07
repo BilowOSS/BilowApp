@@ -7,9 +7,14 @@ semantics:
 
 homePage:
   title: Welcome to BilowApp
+  text: "Total Count:"
 
 settingsPage:
   title: Settings
+  items:
+    theme:
+      title: Switch Theme
+      subtitle: Change the theme of the app to $theme
 
 errorPage:
   title: 404

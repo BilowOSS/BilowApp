@@ -14,14 +14,14 @@ class AppObserver extends BlocObserver {
     super.onChange(bloc, change);
 
     _loggerUtility.log(
-      'onChange(${bloc.runtimeType}, $change)',
+      '${bloc.runtimeType}, $change',
     );
   }
 
   @override
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     _loggerUtility.log(
-      'onError(${bloc.runtimeType}, $error, $stackTrace)',
+      '${bloc.runtimeType}, $error, $stackTrace',
       level: LogLevel.error,
     );
 

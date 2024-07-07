@@ -6,14 +6,10 @@ import 'package:bilow_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    required this.title,
-    super.key,
-  });
-
-  final String title;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,73 +27,76 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ValueCubit<int>>(
-      create: (context) => _valueCubit,
-      child: ResponsiveLayout(
-        mobile: OrientationLayout(
-          portrait: _Mobile(
-            title: widget.title,
-          ),
+    final isDesktop = context.breakpoints.isDesktop;
+    final i18n = context.i18n.homePage;
+    final textTheme = context.theme.textTheme;
+    final title = i18n.title;
+
+    return BilowAppScaffold(
+      title: title,
+      trailingActions: <Widget>[
+        PlatformIconButton(
+          icon: Icon(context.platformIcons.settings),
+          onPressed: () => const SettingsRoute().push(context),
         ),
-        tablet: OrientationLayout(
-          portrait: Container(
-            color: Colors.red,
-          ),
-        ),
-        desktop: OrientationLayout(
-          portrait: Container(
-            color: Colors.blue,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Mobile extends StatelessWidget {
-  const _Mobile({
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.theme;
-    final valueCubit = context.read<ValueCubit<int>>();
-
-    return PlatformScaffold(
-      appBar: PlatformAppBar(
-        backgroundColor: theme.colorScheme.inversePrimary,
-        title: Text(title),
-        trailingActions: <Widget>[
-          PlatformIconButton(
-            icon: Icon(context.platformIcons.settings),
-            onPressed: () => const SettingsRoute().push(context),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      ],
+      body: ResponsiveRowColumn(
+        layout: isDesktop
+            ? ResponsiveRowColumnType.ROW
+            : ResponsiveRowColumnType.COLUMN,
+        columnCrossAxisAlignment: CrossAxisAlignment.stretch,
+        columnMainAxisAlignment: MainAxisAlignment.center,
+        rowCrossAxisAlignment: CrossAxisAlignment.center,
+        rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <ResponsiveRowColumnItem>[
+          ResponsiveRowColumnItem(
+            rowFlex: 2,
+            child: Text(
+              i18n.text,
+              style: textTheme.headlineMedium,
+              textAlign: isDesktop ? TextAlign.left : TextAlign.center,
             ),
-            BlocBuilder<ValueCubit<int>, int>(
-              bloc: valueCubit,
+          ),
+          const ResponsiveRowColumnItem(
+            child: SizedBox(
+              height: 16.0,
+              width: 16.0,
+            ),
+          ),
+          ResponsiveRowColumnItem(
+            child: BlocBuilder<ValueCubit<int>, int>(
+              bloc: _valueCubit,
               builder: (context, value) {
-                return GestureDetector(
-                  onTap: () => valueCubit.value = value + 1,
-                  child: Text(
-                    '$value',
-                    style: theme.textTheme.headlineMedium,
-                  ),
+                return ResponsiveRowColumn(
+                  layout: ResponsiveRowColumnType.ROW,
+                  rowMainAxisAlignment: MainAxisAlignment.center,
+                  children: <ResponsiveRowColumnItem>[
+                    ResponsiveRowColumnItem(
+                      child: PlatformIconButton(
+                        icon: Icon(context.platformIcons.add),
+                        onPressed: () => _valueCubit.value = value + 1,
+                      ),
+                    ),
+                    ResponsiveRowColumnItem(
+                      child: Text(
+                        '$value',
+                        style: isDesktop
+                            ? textTheme.headlineLarge
+                            : textTheme.headlineMedium,
+                      ),
+                    ),
+                    ResponsiveRowColumnItem(
+                      child: PlatformIconButton(
+                        icon: Icon(context.platformIcons.remove),
+                        onPressed: () => _valueCubit.value = value - 1,
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
